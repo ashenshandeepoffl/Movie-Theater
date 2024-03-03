@@ -1,6 +1,5 @@
 <?php
-// Database configuration
-$host = "localhost"; // Change this if your database is on a different server
+$host = "localhost";
 $username = "root";
 $password = "As+s01galaxysa";
 $database = "Movie";
@@ -25,15 +24,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["signup"])) {
     // Get user input from the signup form
     $username = sanitizeInput($_POST["username"]);
     $email = sanitizeInput($_POST["email"]);
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT); // Hash the password
+    $password = password_hash($_POST["password"], PASSWORD_DEFAULT); 
+    $usertype = "admin";
 
-    // Insert user data into the database
-    $sql = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
-    
-    if ($conn->query($sql) === TRUE) {
-        echo "Registration successful!";
+    // Check if the username already exists
+    $checkUsernameQuery = "SELECT * FROM users WHERE username = '$username'";
+    $checkUsernameResult = $conn->query($checkUsernameQuery);
+
+    if ($checkUsernameResult->num_rows > 0) {
+        echo "Username already exists. Please choose a different username.";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        // Insert user data into the database
+        $sql = "INSERT INTO users (username, email, password, usertype) VALUES ('$username', '$email', '$password', '$usertype')";
+        
+        if ($conn->query($sql) === TRUE) {
+            echo "Registration successful!";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+    }
+}
+
+// Handle login form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
+    // Get user input from the login form
+    $loginUsername = sanitizeInput($_POST["loginUsername"]);
+    $loginPassword = sanitizeInput($_POST["loginPassword"]);
+
+    // Retrieve user data from the database based on the entered username
+    $sql = "SELECT * FROM users WHERE username = '$loginUsername'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        
+        if (password_verify($loginPassword, $row["password"])) {
+            // Login successful
+            // Start a session and store user information
+            session_start();
+            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['usertype'] = $row['usertype'];
+            $_SESSION['user_email'] = $row['email'];
+
+            // Redirect based on user type
+            switch ($_SESSION['usertype']) {
+                case 'admin':
+                    header("Location: Admin/main.html");
+                    break;
+                case 'cinema':
+                    header("Location: cinema_dashboard.php");
+                    break;
+                case 'customers':
+                    header("Location: Customer/main.php");
+                    break;
+                default:
+                    echo "Invalid user type";
+                    break;
+            }
+        } else {
+            echo "Incorrect password";
+        }
+    } else {
+        echo "User not found";
     }
 }
 ?>
@@ -57,13 +110,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["signup"])) {
                     <h2 class="title">Sign in</h2>
                     <div class="input-field">
                         <i class="fas fa-user"></i>
-                        <input type="text" placeholder="Username" />
+                        <input type="text" name="loginUsername" placeholder="Username" />
                     </div>
                     <div class="input-field">
                         <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Password" />
+                        <input type="password" name="loginPassword" placeholder="Password" />
                     </div>
-                    <input type="submit" value="Login" class="btn solid" />
+                    <input type="submit" name="login" value="Login" class="btn solid" />
                     <p class="social-text">Or Sign in with social platforms</p>
                     <div class="social-media">
                         <a href="#" class="social-icon">
