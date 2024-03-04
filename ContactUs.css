@@ -32,25 +32,22 @@ body::after {
 section {
   position: relative;
   z-index: 3;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  padding: 50px 20px;
 }
 
 .container {
   max-width: 1080px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 20px;
-  padding-right: 20px;
 }
 
 .section-header {
   margin-bottom: 50px;
   text-align: center;
+  color: #FFF;
 }
 
 .section-header h2 {
-  color: #FFF;
   font-weight: bold;
   font-size: 3em;
   margin-bottom: 20px;
@@ -62,13 +59,14 @@ section {
 
 .row  {
   display: flex;
-  flwx-wrap: wrap;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }
 
 .contact-info {
-  width: 50%;
+  width: 100%;
+  margin-bottom: 30px;
 }
 
 .contact-info-item {
@@ -107,7 +105,7 @@ section {
 .contact-form {
   background-color: #1a1a1a;
   padding: 40px;
-  width: 45%;
+  width: 100%;
   padding-bottom: 20px;
   padding-top: 20px;
 }
@@ -136,9 +134,8 @@ section {
   outline: none;
   resize: none;
   color: #F86F03;
-  background-color: #1a1a1a; /* Set the background color to red */
+  background-color: #1a1a1a;
 }
-
 
 .contact-form .input-box span {
   position: absolute;
@@ -178,21 +175,7 @@ section {
 }
 
 @media (max-width: 991px) {
-  section {
-    padding-top: 50px;
-    padding-bottom: 50px;
-  }
-  
   .row {
     flex-direction: column;
-  }
-  
-  .contact-info {
-    margin-bottom: 40px;
-    width: 100%;
-  }
-  
-  .contact-form {
-    width: 100%;
   }
 }

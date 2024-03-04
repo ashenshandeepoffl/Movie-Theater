@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
             // Redirect based on user type
             switch ($_SESSION['usertype']) {
                 case 'admin':
-                    header("Location: Admin/main.html");
+                    header("Location: Admin/Main.php");
                     break;
                 case 'cinema':
                     header("Location: cinema_dashboard.php");

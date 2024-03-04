@@ -1,8 +1,43 @@
+<?php
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Connect to the database (replace these values with your actual database information)
+    $host = "localhost";
+    $username = "root";
+    $password = "As+s01galaxysa";
+    $database = "Movie";
+
+    // Create a database connection
+    $conn = new mysqli($host, $username, $password, $database);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Retrieve form data
+    $fullName = $_POST['full_name'];
+    $email = $_POST['email'];
+    $message = $_POST['message'];
+
+    // Insert data into the database
+    $sql = "INSERT INTO contacts (full_name, email, message) VALUES ('$fullName', '$email', '$message')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Message sent successfully!";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+
+    $conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us</title>
   <script src="https://kit.fontawesome.com/c32adfdcda.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="ContactUs.css">
@@ -57,25 +92,25 @@
         </div>
         
         <div class="contact-form">
-          <form action="" id="contact-form">
+          <form action="" method="post" id="contact-form">
             <h2>Send Message</h2>
             <div class="input-box">
-              <input type="text" required="true" name="">
+              <input type="text" required="true" name="full_name">
               <span>Full Name</span>
             </div>
             
             <div class="input-box">
-              <input type="email" required="true" name="">
+              <input type="email" required="true" name="email">
               <span>Email</span>
             </div>
             
             <div class="input-box">
-              <textarea required="true" name=""></textarea>
+              <textarea required="true" name="message"></textarea>
               <span>Type your Message...</span>
             </div>
             
             <div class="input-box">
-              <input type="submit" value="Send" name="">
+              <input type="submit" value="Send" name="submit">
             </div>
           </form>
         </div>

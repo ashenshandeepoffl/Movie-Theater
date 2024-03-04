@@ -76,14 +76,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
         echo "Error: " . $sqlDelete . "<br>" . $conn->error;
     }
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie CRUD</title>
+
+    <!-- Add jQuery for AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- JavaScript for live search and form filling -->
+    <script>
+        function liveSearch(query) {
+            $.ajax({
+                url: 'search_movie.php',
+                type: 'post',
+                data: { query: query },
+                success: function(response) {
+                    $('#updateMovieResults').html(response);
+                }
+            });
+        }
+
+        function fillUpdateForm(movieId) {
+            // Implement logic to fill the update form based on movieId
+            // You may use another AJAX request to fetch details and fill the form
+            // For simplicity, consider redirecting to another page with the selected movieId
+            alert('Fill the update form for Movie ID: ' + movieId);
+        }
+    </script>
 </head>
 <body>
     <h2>Create Movie</h2>
@@ -107,6 +131,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
 
     <h2>Update Movie</h2>
     <form action="#" method="post">
+        <label for="updateMovieSearch">Search by Name or ID:</label>
+        <input type="text" id="updateMovieSearch" oninput="liveSearch(this.value)">
+        <div id="updateMovieResults"></div>
         <label for="updateMovieId">Movie ID to Update:</label>
         <input type="text" name="updateMovieId" required>
         <label for="movieName">Movie Name:</label>
