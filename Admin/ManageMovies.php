@@ -36,33 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["create"])) {
     }
 }
 
-// UPDATE Movie
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
-    $movieId = sanitizeInput($_POST["updateMovieId"]);
-    $movieName = sanitizeInput($_POST["updateMovieName"]);
-    $smallDescription = sanitizeInput($_POST["updateSmallDescription"]);
-    $longDescription = sanitizeInput($_POST["updateLongDescription"]);
-    $releaseDate = sanitizeInput($_POST["updateReleaseDate"]);
-    $duration = sanitizeInput($_POST["updateDuration"]);
-    $posterImage = sanitizeInput($_POST["updatePosterImage"]);
-    $trailerEmbedCode = sanitizeInput($_POST["updateTrailerEmbedCode"]);
-
-    $sqlUpdate = "UPDATE movies SET 
-                  movieName = '$movieName', 
-                  smallDescription = '$smallDescription', 
-                  longDescription = '$longDescription', 
-                  releaseDate = '$releaseDate', 
-                  duration = '$duration', 
-                  posterImage = '$posterImage', 
-                  trailerEmbedCode = '$trailerEmbedCode' 
-                  WHERE id = '$movieId'";
-
-    if ($conn->query($sqlUpdate) === TRUE) {
-        echo "Movie updated successfully!";
-    } else {
-        echo "Error: " . $sqlUpdate . "<br>" . $conn->error;
-    }
-}
 
 // DELETE Movie
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
@@ -85,29 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie CRUD</title>
 
-    <!-- Add jQuery for AJAX -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-    <!-- JavaScript for live search and form filling -->
-    <script>
-        function liveSearch(query) {
-            $.ajax({
-                url: 'search_movie.php',
-                type: 'post',
-                data: { query: query },
-                success: function(response) {
-                    $('#updateMovieResults').html(response);
-                }
-            });
-        }
-
-        function fillUpdateForm(movieId) {
-            // Implement logic to fill the update form based on movieId
-            // You may use another AJAX request to fetch details and fill the form
-            // For simplicity, consider redirecting to another page with the selected movieId
-            alert('Fill the update form for Movie ID: ' + movieId);
-        }
-    </script>
 </head>
 <body>
     <h2>Create Movie</h2>
@@ -129,29 +79,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
         <input type="submit" name="create" value="Create Movie">
     </form>
 
-    <h2>Update Movie</h2>
+    <h2>Search and Update Movie</h2>
     <form action="#" method="post">
-        <label for="updateMovieSearch">Search by Name or ID:</label>
-        <input type="text" id="updateMovieSearch" oninput="liveSearch(this.value)">
-        <div id="updateMovieResults"></div>
-        <label for="updateMovieId">Movie ID to Update:</label>
-        <input type="text" name="updateMovieId" required>
-        <label for="movieName">Movie Name:</label>
-        <input type="text" name="movieName" required>
-        <label for="smallDescription">Small Description:</label>
-        <textarea name="smallDescription" required></textarea>
-        <label for="longDescription">Long Description:</label>
-        <textarea name="longDescription" required></textarea>
-        <label for="releaseDate">Release Date:</label>
-        <input type="date" name="releaseDate" required>
-        <label for="duration">Duration:</label>
-        <input type="text" name="duration" required>
-        <label for="posterImage">Poster Image:</label>
-        <input type="text" name="posterImage" required>
-        <label for="trailerEmbedCode">Trailer Embed Code:</label>
-        <textarea name="trailerEmbedCode" required></textarea>
-        <input type="submit" name="update" value="Update Movie">
+        <label for="searchMovieName">Search Movie by Name:</label>
+        <input type="text" name="searchMovieName" required>
+        <input type="submit" name="search" value="Search Movie">
     </form>
+
+    <?php
+    // SEARCH Movie
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["search"])) {
+        $searchMovieName = sanitizeInput($_POST["searchMovieName"]);
+
+        $sqlSearch = "SELECT * FROM movies WHERE movieName LIKE '%$searchMovieName%'";
+        $result = $conn->query($sqlSearch);
+
+        if ($result->num_rows > 0) {
+            echo "<h2>Search Results:</h2>";
+            echo "<form action='#' method='post'>";
+            echo "<label for='updateMovieId'>Select Movie to Update:</label>";
+            echo "<select name='updateMovieId'>";
+            while ($row = $result->fetch_assoc()) {
+                echo "<option value='" . $row["id"] . "'>" . $row["movieName"] . "</option>";
+            }
+            echo "</select>";
+            echo "<input type='submit' name='selectMovie' value='Select Movie'>";
+            echo "</form>";
+        } else {
+            echo "No results found.";
+        }
+    }
+
+    // FILL Update Movie Form
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["selectMovie"])) {
+        $selectedMovieId = sanitizeInput($_POST["updateMovieId"]);
+
+        $sqlSelect = "SELECT * FROM movies WHERE id = '$selectedMovieId'";
+        $selectedMovie = $conn->query($sqlSelect);
+
+        if ($selectedMovie->num_rows > 0) {
+            $row = $selectedMovie->fetch_assoc();
+            // Fill the update form with the selected movie details
+            echo "<h2>Update Movie</h2>";
+            echo "<form action='#' method='post'>";
+            echo "<label for='updateMovieId'>Movie ID to Update:</label>";
+            echo "<input type='text' name='updateMovieId' value='" . $row["id"] . "' readonly required>";
+            echo "<label for='movieName'>Movie Name:</label>";
+            echo "<input type='text' name='movieName' value='" . $row["movieName"] . "' required>";
+            echo "<label for='smallDescription'>Small Description:</label>";
+            echo "<textarea name='smallDescription' required>" . $row["smallDescription"] . "</textarea>";
+            echo "<label for='longDescription'>Long Description:</label>";
+            echo "<textarea name='longDescription' required>" . $row["longDescription"] . "</textarea>";
+            echo "<label for='releaseDate'>Release Date:</label>";
+            echo "<input type='date' name='releaseDate' value='" . $row["releaseDate"] . "' required>";
+            echo "<label for='duration'>Duration:</label>";
+            echo "<input type='text' name='duration' value='" . $row["duration"] . "' required>";
+            echo "<label for='posterImage'>Poster Image:</label>";
+            echo "<input type='text' name='posterImage' value='" . $row["posterImage"] . "' required>";
+            echo "<label for='trailerEmbedCode'>Trailer Embed Code:</label>";
+            echo "<textarea name='trailerEmbedCode' required>" . $row["trailerEmbedCode"] . "</textarea>";
+            echo "<input type='submit' name='update' value='Update Movie'>";
+            echo "</form>";
+        }
+    }
+    ?>
 
     <h2>Delete Movie</h2>
     <form action="#" method="post">
