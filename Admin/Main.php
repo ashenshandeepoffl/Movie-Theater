@@ -86,7 +86,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['usertype'] !== 'admin') {
     </div>
 
     <div id="menu">
-        <a href="Main.php">Home</a> | <a href="#">Users</a> | <a href="Booking.php">Booking</a> | | <a href="ManageMovies.php">Movies</a> | <a href="Logout.php">Logout</a>
+        <a href="Main.php">Home</a> | <a href="Users.php">Users</a> | <a href="Booking.php">Booking</a> | | <a href="ManageMovies.php">Movies</a> | <a href="../Customer/Logout.php">Logout</a>
     </div>
 
     <div id="content">

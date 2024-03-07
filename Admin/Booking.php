@@ -49,14 +49,15 @@ $resultBookings = $conn->query($sqlSelectBookings);
 
     <h3>Movies Currently Going</h3>
     <ul>
-        <?php
-        $sqlSelectMovies = "SELECT * FROM movies";
+    <?php
+        $sqlSelectMovies = "SELECT id, movieName FROM movies";
         $resultMovies = $conn->query($sqlSelectMovies);
 
         while ($rowMovie = $resultMovies->fetch_assoc()) {
-            echo "<li>" . $rowMovie['movieName'] . "</li>";
+            echo "<li>" . $rowMovie['id'] . " - " . $rowMovie['movieName'] . "</li>";
         }
-        ?>
+    ?>
+
     </ul>
 
     <h3>Bookings</h3>
@@ -111,9 +112,9 @@ $resultBookings = $conn->query($sqlSelectBookings);
     const searchEmailInput = document.getElementById('search_email');
     searchEmailInput.addEventListener('input', function() {
         clearTimeout(timerId);
-        timerId = setTimeout(() => {
+        timerId = setTimeout(() => {    
             this.form.submit();
-        }, 500); // Adjust the delay (in milliseconds) as needed
+        }, 2000); // Adjust the delay (in milliseconds) as needed
     });
 </script>
 </body>

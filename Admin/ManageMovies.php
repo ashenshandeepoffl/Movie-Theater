@@ -57,9 +57,90 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie CRUD</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
 
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+
+        section {
+            margin: 20px;
+        }
+
+        form {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        .movie-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 10px;
+            display: inline-block;
+            width: 200px;
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .movie-details {
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
+    <section>
+        <h2>Ongoing Movies</h2>
+        <?php
+        $sqlOngoingMovies = "SELECT id, movieName, posterImage FROM movies";
+        $resultOngoingMovies = $conn->query($sqlOngoingMovies);
+
+        if ($resultOngoingMovies->num_rows > 0) {
+            while ($rowMovie = $resultOngoingMovies->fetch_assoc()) {
+                echo "<div class='movie-card'>";
+                echo "<img src='" . $rowMovie['posterImage'] . "' alt='" . $rowMovie['movieName'] . "'/>";
+                echo "<div class='movie-details'>";
+                echo "<h3>" . $rowMovie['movieName'] . "</h3>";
+                echo "</div>";
+                echo "</div>";
+            }
+        } else {
+            echo "No ongoing movies available.";
+        }
+        ?>
+    </section>
     <h2>Create Movie</h2>
     <form action="#" method="post">
         <label for="movieName">Movie Name:</label>

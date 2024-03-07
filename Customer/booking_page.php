@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login_page.php"); // Redirect to the login page if not logged in
+    header("Location: login_page"); // Redirect to the login page if not logged in
     exit();
 }
 
@@ -75,15 +75,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book"])) {
     }
 }
 
-// Retrieve booked seats for the current movie
-$sqlSelectBookedSeats = "SELECT selected_seats FROM bookings WHERE movie_id = '$movieId'";
+// Retrieve all available seats and booked seats for the current movie
+$allAvailableSeats = array();
+$sqlSelectAvailableSeats = "SELECT seat_number FROM seats WHERE movie_id = '$movieId' AND status = 'available'";
+$resultAvailableSeats = $conn->query($sqlSelectAvailableSeats);
+
+if ($resultAvailableSeats->num_rows > 0) {
+    while ($row = $resultAvailableSeats->fetch_assoc()) {
+        $allAvailableSeats[] = $row['seat_number'];
+    }
+}
+
+$sqlSelectBookedSeats = "SELECT seat_number FROM seats WHERE movie_id = '$movieId' AND status = 'booked'";
 $resultBookedSeats = $conn->query($sqlSelectBookedSeats);
 
 $bookedSeats = array();
 if ($resultBookedSeats->num_rows > 0) {
     while ($row = $resultBookedSeats->fetch_assoc()) {
-        $seats = explode(', ', $row['selected_seats']);
-        $bookedSeats = array_merge($bookedSeats, $seats);
+        $bookedSeats[] = $row['seat_number'];
     }
 }
 ?>
@@ -120,31 +129,36 @@ if ($resultBookedSeats->num_rows > 0) {
             <option value="evening">Evening</option>
         </select>
         <br>
+
+        <!-- Button to search for available and booked seats -->
+        <input type="button" value="Search Seats" onclick="searchSeats()">
+        <br>
+
+        <!-- Display available and booked seats -->
+        <h3>Available Seats</h3>
         <?php
-        $totalSeats = 200;
-
-
-        // Retrieve booked seats for the current movie
-        $sqlSelectBookedSeats = "SELECT selected_seats FROM bookings WHERE movie_id = '$movieId'";
-        $resultBookedSeats = $conn->query($sqlSelectBookedSeats);
-
-        $bookedSeats = array();
-        if ($resultBookedSeats->num_rows > 0) {
-            while ($row = $resultBookedSeats->fetch_assoc()) {
-                $seats = explode(', ', $row['selected_seats']);
-                $bookedSeats = array_merge($bookedSeats, $seats);
-            }
+        foreach ($allAvailableSeats as $seat) {
+            echo "Seat $seat (Available)<br>";
         }
+        ?>
 
-        // Display available seats as checkboxes
-        for ($seat = 1; $seat <= $totalSeats; $seat++) {
+        <h3>Booked Seats</h3>
+        <?php
+        foreach ($bookedSeats as $seat) {
+            echo "Seat $seat (Booked)<br>";
+        }
+        ?>
+
+        <!-- Checkbox for seat selection -->
+        <h3>Select Seats</h3>
+        <?php
+        foreach ($allAvailableSeats as $seat) {
             $seatId = "seat_" . $seat;
-            $disabled = in_array($seatId, $bookedSeats) ? "disabled" : "";
-            $status = in_array($seatId, $bookedSeats) ? "Booked" : "Available";
+            $disabled = in_array($seat, $bookedSeats) ? "disabled" : "";
         ?>
             <label for="<?php echo $seatId; ?>" style="display: inline-block; width: 100px; margin: 5px;">
-                <input type="checkbox" name="selected_seats[]" id="<?php echo $seatId; ?>" class="seat" value="<?php echo $seatId; ?>" <?php echo $disabled; ?>>
-                Seat <?php echo $seat; ?> (<?php echo $status; ?>)
+                <input type="checkbox" name="selected_seats[]" id="<?php echo $seatId; ?>" class="seat" value="<?php echo $seat; ?>" <?php echo $disabled; ?>>
+                Seat <?php echo $seat; ?> (<?php echo in_array($seat, $bookedSeats) ? 'Booked' : 'Available'; ?>)
             </label>
         <?php
         }
@@ -153,10 +167,15 @@ if ($resultBookedSeats->num_rows > 0) {
         <input type="submit" name="book" value="Book Now">
     </form>
 
+    <script>
+        function searchSeats() {
+            // Implement logic to dynamically update the available and booked seats based on the selected date and time
+            alert('Seats search functionality will be implemented here.');
+        }
+    </script>
 </body>
 </html>
 
 <?php
 $conn->close();
 ?>
-
