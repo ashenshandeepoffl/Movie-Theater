@@ -30,102 +30,65 @@ if ($result->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ongoing Movies | March 2024</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        img {
-            max-width: 100px;
-            height: auto;
-        }
-
-        iframe {
-            max-width: 100%;
-            height: auto;
-        }
-
-        a {
-            text-decoration: none;
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        a:hover {
-            background-color: #45a049;
-        }
-
-        p {
-            color: #555;
-        }
-    </style>
+    <link rel="stylesheet" href="DisplayMovies.css">
 </head>
 <body>
-    <div>
-        <h2>Ongoing Movies | March 2024</h2>
-        <table>
-            <tr>
-                <th>Movie Name</th>
-                <th>About The Movie</th>
-                <th>Release Date</th>
-                <th>Duration (HH:MM)</th>
-                <th>Poster Image</th>
-                <th>Trailer</th>
-                <th>Action</th>
-            </tr>
-            <?php foreach ($movies as $movie) : ?>
-                <tr>
-                    <td><?php echo $movie['movieName']; ?></td>
-                    <td><?php echo $movie['smallDescription']; ?></td>
-                    <td><?php echo $movie['releaseDate']; ?></td>
-                    <td><?php echo $movie['duration']; ?></td>
-                    <td><img src="<?php echo $movie['posterImage']; ?>" alt="Poster Image"></td>
-                    <td>
-                        <iframe src="<?php echo $movie['trailerEmbedCode']; ?>" frameborder="0" allowfullscreen></iframe>
-                    </td>
-                    <td>
-                        <?php if (isset($_SESSION['user_id'])) : ?>
-                            <a href="booking_page.php?movie_id=<?php echo $movie['id']; ?>">Book Now</a>
-                        <?php else : ?>
-                            <a href="Signup.php">Login to book</a>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>
+
+    <?php
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    function getOngoingMovies($conn) {
+        $sqlOngoingMovies = "SELECT id, movieName, posterImage, smallDescription, duration FROM movies";
+        $resultOngoingMovies = $conn->query($sqlOngoingMovies);
+
+        if ($resultOngoingMovies->num_rows > 0) {
+            while ($rowMovie = $resultOngoingMovies->fetch_assoc()) {
+                echo "<div class='movie-card'>";
+                echo "<img src='" . $rowMovie['posterImage'] . "' alt='" . $rowMovie['movieName'] . "'/>";
+                echo "<div class='movie-details'>";
+                echo "<h3>" . $rowMovie['movieName'] . "</h3>";
+                echo "<h3>" . $rowMovie['smallDescription'] . "</h3>";
+                echo "<h3>" . $rowMovie['duration'] . "</h3>";
+                echo "</div>";
+                
+                if (isset($_SESSION['user_id'])) {
+                    echo "<a href='booking_page.php?movie_id=" . $rowMovie['id'] . "'>Book Now</a>";
+                } else {
+                    echo "<a href='Signup.php'>Login to book</a>";
+                }
+                
+                echo "</div>";
+            }
+        } else {
+            echo "No ongoing movies available.";
+        }
+    }
+
+    // Call the function to display ongoing movies
+    echo "<section>";
+    echo "<h2>Ongoing Movies</h2>";
+    getOngoingMovies($conn);
+    echo "</section>";
+
+    // FILL Update Movie Form
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["selectMovie"])) {
+        // ... (Your existing code for filling update form)
+    }
+
+    // UPDATE Movie
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
+        // ... (Your existing code for updating the movie)
+
+        // After the update, call the function to display updated ongoing movies
+        echo "<section>";
+        echo "<h2>Ongoing Movies</h2>";
+        getOngoingMovies($conn);
+        echo "</section>";
+    }
+?>
+
 </body>
 </html>
 

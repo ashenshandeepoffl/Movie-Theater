@@ -57,73 +57,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie CRUD</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: #333;
-            color: white;
-            padding: 1em;
-            text-align: center;
-        }
-
-        section {
-            margin: 20px;
-        }
-
-        form {
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #333;
-            color: white;
-        }
-
-        .movie-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 10px;
-            display: inline-block;
-            width: 200px;
-        }
-
-        .movie-card img {
-            width: 100%;
-            height: auto;
-        }
-
-        .movie-details {
-            padding: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="ManageMovies.css">
 </head>
 <body>
-    <section>
-        <h2>Ongoing Movies</h2>
-        <?php
+    <?php
+    // Function to retrieve ongoing movies
+    function getOngoingMovies($conn) {
         $sqlOngoingMovies = "SELECT id, movieName, posterImage FROM movies";
         $resultOngoingMovies = $conn->query($sqlOngoingMovies);
 
@@ -139,8 +78,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
         } else {
             echo "No ongoing movies available.";
         }
-        ?>
-    </section>
+    }
+
+    // Call the function to display ongoing movies
+    echo "<section>";
+    echo "<h2>Ongoing Movies</h2>";
+    getOngoingMovies($conn);
+    echo "</section>";
+
+    // FILL Update Movie Form
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["selectMovie"])) {
+        // ... (Your existing code for filling update form)
+    }
+
+    // UPDATE Movie
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
+        // ... (Your existing code for updating the movie)
+
+        // After the update, call the function to display updated ongoing movies
+        echo "<section>";
+        echo "<h2>Ongoing Movies</h2>";
+        getOngoingMovies($conn);
+        echo "</section>";
+    }
+    ?>
+
     <h2>Create Movie</h2>
     <form action="#" method="post">
         <label for="movieName">Movie Name:</label>
@@ -223,7 +185,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
             echo "</form>";
         }
     }
+
+    // UPDATE Movie
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
+        $updateMovieId = sanitizeInput($_POST["updateMovieId"]);
+        $movieName = sanitizeInput($_POST["movieName"]);
+        $smallDescription = sanitizeInput($_POST["smallDescription"]);
+        $longDescription = sanitizeInput($_POST["longDescription"]);
+        $releaseDate = sanitizeInput($_POST["releaseDate"]);
+        $duration = sanitizeInput($_POST["duration"]);
+        $posterImage = sanitizeInput($_POST["posterImage"]);
+        $trailerEmbedCode = sanitizeInput($_POST["trailerEmbedCode"]);
+
+        $sqlUpdate = "UPDATE movies SET
+                    movieName = '$movieName',
+                    smallDescription = '$smallDescription',
+                    longDescription = '$longDescription',
+                    releaseDate = '$releaseDate',
+                    duration = '$duration',
+                    posterImage = '$posterImage',
+                    trailerEmbedCode = '$trailerEmbedCode'
+                    WHERE id = '$updateMovieId'";
+
+        if ($conn->query($sqlUpdate) === TRUE) {
+            echo "Movie updated successfully!";
+        } else {
+            echo "Error: " . $sqlUpdate . "<br>" . $conn->error;
+        }
+    }
     ?>
+
 
     <h2>Delete Movie</h2>
     <form action="#" method="post">

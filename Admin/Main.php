@@ -77,6 +77,23 @@ if (!isset($_SESSION['user_id']) || $_SESSION['usertype'] !== 'admin') {
             color: #007bff;
             text-decoration: none;
         }
+        .movie-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 10px;
+            display: inline-block;
+            width: 200px;
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .movie-details {
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -90,34 +107,58 @@ if (!isset($_SESSION['user_id']) || $_SESSION['usertype'] !== 'admin') {
     </div>
 
     <div id="content">
-        <h2>Recent Movies</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Movie Name</th>
-                    <th>Release Date</th>
-                    <th>Duration</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Movie 1</td>
-                    <td>2024-03-01</td>
-                    <td>2 hours</td>
-                </tr>
-                <tr>
-                    <td>Movie 2</td>
-                    <td>2024-03-05</td>
-                    <td>1.5 hours</td>
-                </tr>
-                <!-- Add more rows as needed -->
-            </tbody>
-        </table>
+        
+    <?php
+    $host = "localhost";
+    $username = "root";
+    $password = "As+s01galaxysa";
+    $database = "Movie";
 
-        <div id="logout">
-            <a href="Logout.php">Logout</a>
-        </div>
-    </div>
+    $conn = new mysqli($host, $username, $password, $database);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+        function getOngoingMovies($conn) {
+        $sqlOngoingMovies = "SELECT id, movieName, posterImage FROM movies";
+        $resultOngoingMovies = $conn->query($sqlOngoingMovies);
+
+        if ($resultOngoingMovies->num_rows > 0) {
+            while ($rowMovie = $resultOngoingMovies->fetch_assoc()) {
+                echo "<div class='movie-card'>";
+                echo "<img src='" . $rowMovie['posterImage'] . "' alt='" . $rowMovie['movieName'] . "'/>";
+                echo "<div class='movie-details'>";
+                echo "<h3>" . $rowMovie['movieName'] . "</h3>";
+                echo "</div>";
+                echo "</div>";
+            }
+        } else {
+            echo "No ongoing movies available.";
+        }
+    }
+
+    // Call the function to display ongoing movies
+    echo "<section>";
+    echo "<h2>Ongoing Movies</h2>";
+    getOngoingMovies($conn);
+    echo "</section>";
+
+    // FILL Update Movie Form
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["selectMovie"])) {
+        // ... (Your existing code for filling update form)
+    }
+
+    // UPDATE Movie
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
+        // ... (Your existing code for updating the movie)
+
+        // After the update, call the function to display updated ongoing movies
+        echo "<section>";
+        echo "<h2>Ongoing Movies</h2>";
+        getOngoingMovies($conn);
+        echo "</section>";
+    }
+    ?>
 </body>
 
 </html>

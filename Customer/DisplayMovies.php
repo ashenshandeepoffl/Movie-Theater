@@ -30,43 +30,31 @@ if ($result->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Movies</title>
+    <link rel="stylesheet" href="DisplayMovies.css">
 </head>
 <body>
-    <h2>All Movies</h2>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Movie Name</th>
-            <th>Small Description</th>
-            <th>Release Date</th>
-            <th>Duration</th>
-            <th>Poster Image</th>
-            <th>Trailer</th>
-            <th>Action</th>
-        </tr>
-        <?php foreach ($movies as $movie) : ?>
-            <tr>
-                <td><?php echo $movie['id']; ?></td>
-                <td><?php echo $movie['movieName']; ?></td>
-                <td><?php echo $movie['smallDescription']; ?></td>
-                <td><?php echo $movie['releaseDate']; ?></td>
-                <td><?php echo $movie['duration']; ?></td>
-                <td><img src="<?php echo $movie['posterImage']; ?>" alt="Poster Image" width="100"></td>
-                <td>
-                    <iframe width="200" height="150" src="<?php echo $movie['trailerEmbedCode']; ?>" frameborder="0" allowfullscreen></iframe>
-                </td>
-                <td>
-                    <?php if (isset($_SESSION['user_id'])) : ?>
-                        <a href="booking_page.php?movie_id=<?php echo $movie['id']; ?>">Book Now</a>
-                    <?php else : ?>
-                        <p>Login to book</p>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+    <div class="container">
+        <h2>All Movies</h2>
+        <div class="card-container">
+            <?php foreach ($movies as $movie) : ?>
+                <div class="card">
+                    <img src="<?php echo $movie['posterImage']; ?>" alt="Poster Image">
+                    <div class="card-content">
+                        <h3><?php echo $movie['movieName']; ?></h3>
+                        <p><?php echo $movie['smallDescription']; ?></p>
+                        <?php if (isset($_SESSION['user_id'])) : ?>
+                            <a href="booking_page.php?movie_id=<?php echo $movie['id']; ?>">Book Now</a>
+                        <?php else : ?>
+                            <p>Login to book</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 </body>
 </html>
+
 
 <?php
 $conn->close();
