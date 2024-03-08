@@ -101,26 +101,137 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book"])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Page</title>
-    <link rel="stylesheet" href="booking_page.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h2,
+        h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        label {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        input,
+        select {
+            margin-top: 5px;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background-color: #3498db;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        div {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .seat {
+            display: none;
+        }
+
+        .seat+label {
+            display: inline-block;
+            padding: 5px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+
+        .seat:checked+label {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .seat[disabled]+label {
+            background-color: #ddd;
+            color: #777;
+            cursor: not-allowed;
+        }
+
+        /* Responsive Styles */
+        @media only screen and (min-width: 600px) {
+            form {
+                max-width: 400px;
+            }
+        }
+
+        @media only screen and (min-width: 768px) {
+            form {
+                max-width: 600px;
+            }
+        }
+
+        @media only screen and (min-width: 992px) {
+            form {
+                max-width: 800px;
+            }
+        }
+
+        @media only screen and (min-width: 1200px) {
+            form {
+                max-width: 1000px;
+            }
+        }
+    </style>
 </head>
-<body class="container">
+
+<body>
     <h2>Booking Page</h2>
     <h3>Movie Details</h3>
-    
-    <div class='movie-card'> 
-        <img src='<?php echo $movie['posterImage']; ?>'/>
-        <h3 class="movie-details"><?php echo $movie['movieName']; ?></h3>
+
+    <div>
+        <img src='<?php echo $movie['posterImage']; ?>' alt="Movie Poster">
+        <h3><?php echo $movie['movieName']; ?></h3>
     </div>
-    
+
     <h3>Search for Available Seats</h3>
-    <form action="#" method="post" class="search-ava">
+    <form action="#" method="post">
         <label for="search_date">Select Date:</label>
         <input type="date" id="search_date" name="search_date" required>
-        <br>
 
         <label for="search_time_slot">Select Time Slot:</label>
         <select id="search_time_slot" name="search_time_slot" required>
@@ -128,7 +239,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book"])) {
             <option value="afternoon">Afternoon</option>
             <option value="evening">Evening</option>
         </select>
-        <br>
+
         <input type="submit" name="search" value="Search">
     </form>
 
@@ -136,7 +247,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book"])) {
     <form action="#" method="post">
         <label for="booking_date">Select Date:</label>
         <input type="date" id="booking_date" name="booking_date" required>
-        <br>
 
         <label for="time_slot">Select Time Slot:</label>
         <select id="time_slot" name="time_slot" required>
@@ -144,7 +254,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book"])) {
             <option value="afternoon">Afternoon</option>
             <option value="evening">Evening</option>
         </select>
-        <br>
+
         <?php
         $totalSeats = 200;
 
@@ -154,18 +264,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book"])) {
             $disabled = in_array($seatId, $bookedSeats) ? "disabled" : "";
             $status = in_array($seatId, $bookedSeats) ? "Booked" : "Available";
         ?>
-            <label for="<?php echo $seatId; ?>" style="display: inline-block; width: 100px; margin: 5px;">
-                <input type="checkbox" name="selected_seats[]" id="<?php echo $seatId; ?>" class="seat" value="<?php echo $seatId; ?>" <?php echo $disabled; ?>>
-                Seat <?php echo $seat; ?> (<?php echo $status; ?>)
-            </label>
+            <input type="checkbox" name="selected_seats[]" id="<?php echo $seatId; ?>" class="seat" value="<?php echo $seatId; ?>" <?php echo $disabled; ?>>
+            <label for="<?php echo $seatId; ?>">Seat <?php echo $seat; ?> (<?php echo $status; ?>)</label>
         <?php
         }
         ?>
-        <br>
+
         <input type="submit" name="book" value="Book Now">
     </form>
-
 </body>
+
 </html>
 
 <?php

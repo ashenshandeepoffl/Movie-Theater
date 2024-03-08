@@ -80,43 +80,63 @@ if ($resultUser->num_rows > 0) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Details</title>
+    <link rel="stylesheet" href="userProfile.css">
 </head>
-<body>
-    <h2>Profile Details</h2>
-    <p>Username: <?php echo $user['username']; ?></p>
-    <p>Email: <?php echo $user['email']; ?></p>
 
-    <!-- Display Edit Profile form if "Edit Profile" button is clicked -->
-    <?php
-    if (isset($_POST["edit_profile"])) {
-        ?>
-        <h2>Edit Profile</h2>
-        <form action="#" method="post">
-            <label for="new_username">New Username:</label>
-            <input type="text" name="new_username" value="<?php echo $user['username']; ?>" required>
-            <label for="new_email">New Email:</label>
-            <input type="email" name="new_email" value="<?php echo $user['email']; ?>" required>
-            <label for="old_password">Old Password:</label>
-            <input type="password" name="old_password" required>
-            <label for="new_password">New Password:</label>
-            <input type="password" name="new_password" required>
-            <input type="submit" name="update_account" value="Update Account">
-        </form>
-        <?php
-    } else {
-        ?>
-        <!-- Display "Edit Profile" button -->
-        <form action="#" method="post">
-            <input type="submit" name="edit_profile" value="Edit Profile">
-        </form>
-        <?php
-    }
-    ?>
+<body>
+
+    <div class="form-modal">
+
+        <div class="form-toggle">
+            <button id="login-toggle" onclick="toggleLogin()">Profile</button>
+            <button id="signup-toggle" onclick="toggleSignup()">Edit Profile</button>
+        </div>
+
+        <div id="login-form">
+            <form>
+                <input type="text" placeholder="<?php echo $user['username']; ?>" disabled />
+                <input type="text" placeholder="<?php echo $user['email']; ?>" disabled />
+            </form>
+        </div>
+
+        <div id="signup-form">
+            <form>
+                <input type="text" name="new_username" value="<?php echo $user['username']; ?>" required>
+                <input type="email" name="new_email" value="<?php echo $user['email']; ?>" required>
+                <input type="password" name="old_password" required placeholder="Old Password">
+                <input type="password" name="new_password" required placeholder="New password">
+                <input type="submit" name="update_account" value="Update Account" class="btn signup">
+            </form>
+        </div>
+
+    </div>
+
 </body>
+<script>
+    function toggleSignup() {
+        document.getElementById("login-toggle").style.backgroundColor = "#fff";
+        document.getElementById("login-toggle").style.color = "#222";
+        document.getElementById("signup-toggle").style.backgroundColor = "#F86F03";
+        document.getElementById("signup-toggle").style.color = "#fff";
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("signup-form").style.display = "block";
+    }
+
+    function toggleLogin() {
+        document.getElementById("login-toggle").style.backgroundColor = "#F86F03";
+        document.getElementById("login-toggle").style.color = "#fff";
+        document.getElementById("signup-toggle").style.backgroundColor = "#fff";
+        document.getElementById("signup-toggle").style.color = "#222";
+        document.getElementById("signup-form").style.display = "none";
+        document.getElementById("login-form").style.display = "block";
+    }
+</script>
+
 </html>
 
 <?php

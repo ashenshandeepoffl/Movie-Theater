@@ -1,0 +1,26 @@
+ <?php
+        $totalSeats = 200;
+        $totalSeatsInRow = 10;
+
+        // Display available seats as checkboxes
+        for ($seat = 1; $seat <= $totalSeats; $seat++) {
+            $seatId = "seat_" . $seat;
+            $disabled = in_array($seatId, $bookedSeats) ? "disabled" : "";
+            $status = in_array($seatId, $bookedSeats) ? "B" : "A";
+
+            // Start a new row after every 10 seats
+            if ($seat % $totalSeatsInRow == 1) {
+                echo '<div class="row">';
+            }
+
+            // Add a gap in the middle of the row for the aisle
+            if ($seat % $totalSeatsInRow == 6) {
+                echo '<div class="aisle"></div>';
+            }
+
+        ?>
+
+            <label for="<?php echo $seatId; ?>">
+                <input type="checkbox" name="selected_seats[]" id="<?php echo $seatId; ?>" value="<?php echo $seatId; ?>" <?php echo $disabled; ?>>
+                <?php echo $seat . " " . $status ?>
+            </label>

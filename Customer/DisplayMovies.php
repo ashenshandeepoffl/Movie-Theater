@@ -26,15 +26,28 @@ if ($result->num_rows > 0) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Movies</title>
     <link rel="stylesheet" href="DisplayMovies.css">
 </head>
+
 <body>
+    <div class="header">
+        <div class="container-nav">
+            <!-- <div class="logo"><a href="#">Logo</a></div> -->
+            <div class="nav">
+                <a href="main.php">Home</a>
+                <a href="DisplayMovies.php">Movies</a>
+                <a href="userProfile.php">Profile</a>
+                <a href="Logout.php">Logout</a>
+            </div>
+        </div>
+    </div>
     <div class="container">
-        <h2>All Movies</h2>
+        <h2>Ongoing Movies | 2024</h2>
         <div class="card-container">
             <?php foreach ($movies as $movie) : ?>
                 <div class="card">
@@ -53,6 +66,7 @@ if ($result->num_rows > 0) {
         </div>
     </div>
 </body>
+
 </html>
 
 
