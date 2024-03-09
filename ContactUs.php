@@ -59,20 +59,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <div class="information">
             <i class="fas fa-map-marker-alt"></i> &nbsp &nbsp
 
-            <p>92 Cherry Drive Uniondale, NY 11553</p>
+            <p>Colombo 06</p>
           </div>
           <div class="information">
             <i class="fas fa-envelope"></i> &nbsp &nbsp
-            <p>lorem@ipsum.com</p>
+            <p>email@email.com</p>
           </div>
           <div class="information">
             <i class="fas fa-phone"></i>&nbsp&nbsp
-            <p>123-456-789</p>
+            <p>0113038215</p>
           </div>
         </div>
 
         <div class="social-media">
-          <p>Connect with us :</p>
+          <p>Connect with us</p>
           <div class="social-icons">
             <a href="#">
               <i class="fab fa-facebook-f"></i>

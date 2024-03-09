@@ -48,51 +48,73 @@ if (!$resultUsers) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - User List</title>
-    <link rel="stylesheet" href="Users.css">
+    <link rel="stylesheet" href="Booking.css">
 </head>
-<body>
-    <h2>User List</h2>
-    <form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-        <label for="search">Search:</label>
-        <input type="text" name="search" id="search" value="<?php echo $searchTerm; ?>">
-        <input type="submit" value="Search">
-    </form>
 
-    <table border="1">
-        <tr>
-            <th>User ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>User Type</th>
-            <th>Change User Type</th>
-        </tr>
-        <?php
-        while ($rowUser = $resultUsers->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>" . $rowUser['id'] . "</td>";
-            echo "<td>" . $rowUser['username'] . "</td>";
-            echo "<td>" . $rowUser['email'] . "</td>";
-            echo "<td>" . $rowUser['usertype'] . "</td>";
-            echo "<td>
-                    <form method='post' action='" . $_SERVER["PHP_SELF"] . "'>
-                        <input type='hidden' name='userId' value='" . $rowUser['id'] . "'>
-                        <select name='newUserType'>
-                            <option value='admin' " . ($rowUser['usertype'] == 'admin' ? 'selected' : '') . ">Admin</option>
-                            <option value='customer' " . ($rowUser['usertype'] == 'customer' ? 'selected' : '') . ">Customer</option>
-                            <option value='cinema' " . ($rowUser['usertype'] == 'cinema' ? 'selected' : '') . ">Cinema</option>
-                        </select>
-                        <input type='submit' name='updatePermission' value='Update'>
-                    </form>
-                  </td>";
-            echo "</tr>";
-        }
-        ?>
-    </table>
+<body>
+    <div class="container">
+        <header>
+            <h2>User List</h2>
+        </header>
+
+        <div class="row">
+            <div class="col">
+                <h3>Messages for Admins</h3>
+                <div class="movies-container">
+                    <ul>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col">
+                <h3>Search Users</h3>
+                <form method="get" class="search-form" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                    <input type="text" name="search" id="search" class="search-box" value="<?php echo $searchTerm; ?>">
+                    <input type="submit" value="Search">
+                </form>
+
+                <div class="bookings-container">
+                    <table>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>User Type</th>
+                            <th>Change User Type</th>
+                        </tr>
+                        <?php
+                        while ($rowUser = $resultUsers->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $rowUser['id'] . "</td>";
+                            echo "<td>" . $rowUser['username'] . "</td>";
+                            echo "<td>" . $rowUser['email'] . "</td>";
+                            echo "<td>" . $rowUser['usertype'] . "</td>";
+                            echo "<td>
+                            <form method='post' action='" . $_SERVER["PHP_SELF"] . "'>
+                                <input type='hidden' name='userId' value='" . $rowUser['id'] . "'>
+                                <select name='newUserType'>
+                                    <option value='admin' " . ($rowUser['usertype'] == 'admin' ? 'selected' : '') . ">Admin</option>
+                                    <option value='customer' " . ($rowUser['usertype'] == 'customer' ? 'selected' : '') . ">Customer</option>
+                                    <option value='cinema' " . ($rowUser['usertype'] == 'cinema' ? 'selected' : '') . ">Cinema</option>
+                                </select>
+                                <input type='submit' name='updatePermission' value='Update'>
+                            </form>
+                            </td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
 
 <?php

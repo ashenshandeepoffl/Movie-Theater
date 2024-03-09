@@ -106,172 +106,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Page</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        h2,
-        h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        label {
-            margin-top: 10px;
-            color: #555;
-        }
-
-        input,
-        select {
-            margin-top: 5px;
-            padding: 8px;
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-        }
-
-        input[type="submit"] {
-            background-color: #3498db;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #2980b9;
-        }
-
-        div {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .seat {
-            display: none;
-        }
-
-        .seat+label {
-            display: inline-block;
-            padding: 5px;
-            margin: 5px;
-            cursor: pointer;
-            border-radius: 5px;
-            background-color: #eee;
-        }
-
-        .seat:checked+label {
-            background-color: #3498db;
-            color: #fff;
-        }
-
-        .seat[disabled]+label {
-            background-color: #ddd;
-            color: #777;
-            cursor: not-allowed;
-        }
-
-        /* Responsive Styles */
-        @media only screen and (min-width: 600px) {
-            form {
-                max-width: 400px;
-            }
-        }
-
-        @media only screen and (min-width: 768px) {
-            form {
-                max-width: 600px;
-            }
-        }
-
-        @media only screen and (min-width: 992px) {
-            form {
-                max-width: 800px;
-            }
-        }
-
-        @media only screen and (min-width: 1200px) {
-            form {
-                max-width: 1000px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="booking_page.css   ">
 </head>
 
 <body>
-    <h2>Booking Page</h2>
-    <h3>Movie Details</h3>
+    <div class="container">
+        <header>
+            <h2>User List</h2>
+        </header>
 
-    <div>
-        <img src='<?php echo $movie['posterImage']; ?>' alt="Movie Poster">
-        <h3><?php echo $movie['movieName']; ?></h3>
+        <div>
+            <div class="col">
+                <h3>How to book your seat</h3>
+                <div class="movies-container">
+                    <ul>
+                        <li>Seat number 1 to 10 is the front row of the cinema</li>
+                        <li>Seat number 90 to 100 are the back rows of the cinme</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class='movie-card'>
+                <img src='<?php echo $movie['posterImage']; ?>' alt="Movie Poster">
+                <div class='movie-details'>
+                    <h3><?php echo $movie['movieName']; ?></h3>
+                </div>
+            </div>
+
+
+            <h3>Search for Available Seats</h3>
+            <form action="#" method="post">
+                <label for="search_date">Select Date</label>
+                <input type="date" id="search_date" name="search_date" required>
+
+                <label for="search_time_slot">Select Time Slot</label>
+                <select id="search_time_slot" name="search_time_slot" required>
+                    <option value="morning">Morning</option>
+                    <option value="afternoon">Afternoon</option>
+                    <option value="evening">Evening</option>
+                </select>
+
+                <input type="submit" name="search" value="Search">
+            </form>
+
+            <h3>Booking Form</h3>
+            <form action="#" method="post">
+                <label for="booking_date">Select Date:</label>
+                <input type="date" id="booking_date" name="booking_date" required>
+
+                <label for="time_slot">Select Time Slot:</label>
+                <select id="time_slot" name="time_slot" required>
+                    <option value="morning">Morning</option>
+                    <option value="afternoon">Afternoon</option>
+                    <option value="evening">Evening</option>
+                </select>
+
+                <?php
+                $totalSeats = 100;
+                $seatsPerRow = 5;
+                $totalRows = 20;
+
+                // Display available seats as checkboxes
+                for ($row = 1; $row <= $totalRows; $row++) {
+                    echo '<div class="checkbox-container">';
+                    for ($seat = 1; $seat <= $seatsPerRow; $seat++) {
+                        $seatNumber = ($row - 1) * $seatsPerRow + $seat;
+                        $seatId = "seat_" . $seatNumber;
+                        $disabled = in_array($seatId, $bookedSeats) ? "disabled" : "";
+                        $status = in_array($seatId, $bookedSeats) ? "Booked" : "Available";
+                ?>
+                        <input type="checkbox" name="selected_seats[]" id="<?php echo $seatId; ?>" class="seat" value="<?php echo $seatId; ?>" <?php echo $disabled; ?>>
+                        <label for="<?php echo $seatId; ?>"> <?php echo '    ' . $seatNumber; ?></label>
+                <?php
+                    }
+                    echo '</div>';
+                }
+                ?>
+
+                <input type="submit" name="book" value="Book Now">
+            </form>
+        </div>
     </div>
-
-    <h3>Search for Available Seats</h3>
-    <form action="#" method="post">
-        <label for="search_date">Select Date:</label>
-        <input type="date" id="search_date" name="search_date" required>
-
-        <label for="search_time_slot">Select Time Slot:</label>
-        <select id="search_time_slot" name="search_time_slot" required>
-            <option value="morning">Morning</option>
-            <option value="afternoon">Afternoon</option>
-            <option value="evening">Evening</option>
-        </select>
-
-        <input type="submit" name="search" value="Search">
-    </form>
-
-    <h3>Booking Form</h3>
-    <form action="#" method="post">
-        <label for="booking_date">Select Date:</label>
-        <input type="date" id="booking_date" name="booking_date" required>
-
-        <label for="time_slot">Select Time Slot:</label>
-        <select id="time_slot" name="time_slot" required>
-            <option value="morning">Morning</option>
-            <option value="afternoon">Afternoon</option>
-            <option value="evening">Evening</option>
-        </select>
-
-        <?php
-        $totalSeats = 200;
-
-        // Display available seats as checkboxes
-        for ($seat = 1; $seat <= $totalSeats; $seat++) {
-            $seatId = "seat_" . $seat;
-            $disabled = in_array($seatId, $bookedSeats) ? "disabled" : "";
-            $status = in_array($seatId, $bookedSeats) ? "Booked" : "Available";
-        ?>
-            <input type="checkbox" name="selected_seats[]" id="<?php echo $seatId; ?>" class="seat" value="<?php echo $seatId; ?>" <?php echo $disabled; ?>>
-            <label for="<?php echo $seatId; ?>">Seat <?php echo $seat; ?> (<?php echo $status; ?>)</label>
-        <?php
-        }
-        ?>
-
-        <input type="submit" name="book" value="Book Now">
-    </form>
 </body>
 
 </html>

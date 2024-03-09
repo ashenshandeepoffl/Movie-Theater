@@ -1,0 +1,52 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+}
+
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+.navigation {
+    background-color: #444;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+.navigation a {
+    text-decoration: none;
+    color: #fff;
+    margin: 0 10px;
+}
+
+.navigation a:hover {
+    color: #66c0f4;
+}
+
+section h2{
+    text-align: center;
+}
+
+.movie-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 10px;
+    display: inline-block;
+    width: 200px;
+}
+
+.movie-card img {
+    width: 100%;
+    height: auto;
+}
+
+.movie-details {
+    padding: 10px;
+}
