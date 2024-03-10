@@ -4,41 +4,41 @@ $username = "root";
 $password = "As+s01galaxysa";
 $database = "Movie";
 
-// Create a database connection
+
 $conn = new mysqli($host, $username, $password, $database);
 
-// Check connection
+
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Function to sanitize user input
+
 function sanitizeInput($input)
 {
     global $conn;
     return mysqli_real_escape_string($conn, htmlspecialchars(trim($input)));
 }
 
-// Handle signup form submission
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["signup"])) {
     // Get user input from the signup form
     $username = sanitizeInput($_POST["username"]);
     $email = sanitizeInput($_POST["email"]);
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT); 
-    $usertype = "admin";
+    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    $usertype = "customers";
 
     // Check if the username already exists
     $checkUsernameQuery = "SELECT * FROM users WHERE username = '$username'";
     $checkUsernameResult = $conn->query($checkUsernameQuery);
 
     if ($checkUsernameResult->num_rows > 0) {
-        echo "Username already exists. Please choose a different username.";
+        echo '<script>alert("Username already exists. Please choose a different username.");</script>';
     } else {
         // Insert user data into the database
         $sql = "INSERT INTO users (username, email, password, usertype) VALUES ('$username', '$email', '$password', '$usertype')";
-        
+
         if ($conn->query($sql) === TRUE) {
-            echo "Registration successful!";
+            echo '<script>alert("Register Successfully");</script>';
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        
+
         if (password_verify($loginPassword, $row["password"])) {
             // Login successful
             // Start a session and store user information
@@ -83,10 +83,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                     break;
             }
         } else {
-            echo "Incorrect password";
+            echo '<script>alert("Incorrect Password, please try again");</script>';
         }
     } else {
-        echo "User not found";
+        echo '<script>alert("User not found, please check your username or password");</script>';
     }
 }
 ?>
@@ -110,11 +110,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                     <h2 class="title">Sign in</h2>
                     <div class="input-field">
                         <i class="fas fa-user"></i>
-                        <input type="text" name="loginUsername" placeholder="Username" />
+                        <input type="text" name="loginUsername" placeholder="Username" required />
                     </div>
                     <div class="input-field">
                         <i class="fas fa-lock"></i>
-                        <input type="password" name="loginPassword" placeholder="Password" />
+                        <input type="password" name="loginPassword" placeholder="Password" required />
                     </div>
                     <input type="submit" name="login" value="Login" class="btn solid" />
                     <p class="social-text">Or Sign in with social platforms</p>
@@ -133,6 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                         </a>
                     </div>
                 </form>
+
                 <form action="#" method="post" class="sign-up-form">
                     <h2 class="title">Sign up</h2>
                     <div class="input-field">
@@ -172,7 +173,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                 <div class="content">
                     <h3>New to our Cinama ?</h3>
                     <p>
-                    Enjoy star-studded performances on our silver screen
+                        Enjoy star-studded performances on our silver screen
                     </p>
                     <button class="btn transparent" id="sign-up-btn">
                         Sign up
@@ -200,8 +201,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
 </body>
 
 </html>
-
-<?php
-// Close the database connection
-$conn->close();
-?>

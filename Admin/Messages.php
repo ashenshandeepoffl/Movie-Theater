@@ -1,18 +1,6 @@
 <?php
-session_start();
-
-$host = "localhost";
-$username = "root";
-$password = "As+s01galaxysa";
-$database = "Movie";
-
-// Create a database connection
-$conn = new mysqli($host, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include 'dbConnection.php';
+include 'Navigation.php';
 
 // Retrieve user messages data
 $sql = "SELECT full_name, email, message FROM contacts";

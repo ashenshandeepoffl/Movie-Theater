@@ -37,13 +37,36 @@ $welcomeMessage = isset($_SESSION['username']) ? "Welcome, " . $_SESSION['userna
     <div class="menu">
         <ul>
             <li><a href="main.php">Home</a></li>
-            <li><a href="DisplayMovies.php">Movies</a></li>
+            <li><a href="Movies.php">Movies</a></li>
             <li><a href="userProfile.php">Profile</a></li>
             <li><a href="Logout.php">Logout</a></li>
         </ul>
     </div>
 
     <script>
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = function() {
+            window.history.pushState(null, "", window.location.href);
+        };
+
+        function liveSearch() {
+            var searchInput = document.getElementById("searchInput").value;
+            var priceFilter = document.getElementById("priceFilter").value;
+            var categoryFilter = document.getElementById("categoryFilter").value;
+
+            // Send AJAX request to server for live search
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("filteredMenuContainer").innerHTML = this.responseText;
+                }
+            };
+
+            xmlhttp.open("GET", "liveSearch.php?searchInput=" + searchInput + "&priceFilter=" + priceFilter + "&categoryFilter=" + categoryFilter, true);
+            xmlhttp.send();
+        }
+
+
         const menuToggle = document.querySelector('.toggle');
         const showcase = document.querySelector('.showcase');
 

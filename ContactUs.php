@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           </div>
           <div class="information">
             <i class="fas fa-phone"></i>&nbsp&nbsp
-            <p>0113038215</p>
+            <p>+94 11 303 8215</p>
           </div>
         </div>
 
@@ -119,6 +119,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 
   <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const form = document.querySelector("form");
+
+      form.addEventListener("submit", function(event) {
+        const nameInput = document.querySelector('input[name="name"]');
+        const emailInput = document.querySelector('input[name="email"]');
+        const messageInput = document.querySelector('textarea[name="message"]');
+
+        if (!validateName(nameInput.value)) {
+          alert("Please enter your full name");
+          event.preventDefault();
+        } else if (!validateEmail(emailInput.value)) {
+          alert("Please enter a valid email address");
+          event.preventDefault();
+        } else if (!validateMessage(messageInput.value)) {
+          alert("Please enter your message");
+          event.preventDefault();
+        }
+      });
+
+      function validateName(name) {
+        return name.trim() !== "";
+      }
+
+      function validateEmail(email) {
+        // Simple email validation, you might want to use a more robust solution
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      function validateMessage(message) {
+        return message.trim() !== "";
+      }
+    });
+
     const inputs = document.querySelectorAll(".input");
 
     function focusFunc() {
@@ -138,6 +173,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       input.addEventListener("blur", blurFunc);
     });
   </script>
+
 </body>
 
 </html>
