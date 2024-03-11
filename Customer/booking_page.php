@@ -5,7 +5,7 @@ include 'dbConnection.php';
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login_page.php"); // Redirect to the login page if not logged in
+    header("Location: ../Signup.php"); // Redirect to the login page if not logged in
     exit();
 }
 
@@ -18,7 +18,7 @@ if ($resultUser->num_rows > 0) {
     $user = $resultUser->fetch_assoc();
     $userEmail = $user['email'];
 } else {
-    echo "User not found!";
+    echo '<script>alert("User not found!");</script>';
     exit();
 }
 
@@ -33,11 +33,11 @@ if (isset($_GET['movie_id'])) {
     if ($resultMovie->num_rows > 0) {
         $movie = $resultMovie->fetch_assoc();
     } else {
-        echo "Movie not found!";
+        echo '<script>alert("Movie not found!");</script>';
         exit();
     }
 } else {
-    echo "Movie ID not provided!";
+    echo '<script>alert("Movie ID not provided!");</script>';
     exit();
 }
 
@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book"])) {
             echo "Error: " . $sqlBook . "<br>" . $conn->error;
         }
     } else {
-        echo "Please select at least one seat!";
+        echo '<script>alert("Please select at least one seat!");</script>';
     }
 }
 ?>

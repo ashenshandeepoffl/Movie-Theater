@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["create"])) {
                   VALUES ('$movieName', '$smallDescription', '$longDescription', '$releaseDate', '$duration', '$posterImage', '$trailerEmbedCode')";
 
     if ($conn->query($sqlCreate) === TRUE) {
-        echo "Movie created successfully!";
+        echo '<script>alert("Movie created successfully!");</script>';
     } else {
         echo "Error: " . $sqlCreate . "<br>" . $conn->error;
     }
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
     $sqlDelete = "DELETE FROM movies WHERE id = '$movieId'";
 
     if ($conn->query($sqlDelete) === TRUE) {
-        echo "Movie deleted successfully!";
+        echo '<script>alert("Movie deleted successfully!");</script>';
     } else {
         echo "Error: " . $sqlDelete . "<br>" . $conn->error;
     }
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie CRUD</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="ManageMovies.css">
 </head>
 
@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
                     echo "</div>";
                 }
             } else {
-                echo "No ongoing movies available.";
+                echo '<script>alert("No ongoing movies available");</script>';
             }
         }
 
@@ -137,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
                 echo "<input type='submit' name='selectMovie' value='Select Movie'>";
                 echo "</form>";
             } else {
-                echo "No results found.";
+                echo '<script>alert("No results found");</script>';
             }
         }
 
@@ -196,7 +196,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
                     WHERE id = '$updateMovieId'";
 
             if ($conn->query($sqlUpdate) === TRUE) {
-                echo "Movie updated successfully!";
+                echo '<script>alert("Movie updated successfully!");</script>';
             } else {
                 echo "Error: " . $sqlUpdate . "<br>" . $conn->error;
             }

@@ -4,9 +4,8 @@ include 'dbConnection.php';
 
 session_start();
 
-// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: Signup.php"); // Redirect to the login page if not logged in
+    header("Location: ../Signup.php");
     exit();
 }
 
@@ -44,17 +43,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update_account"])) {
 
             if ($conn->query($sqlUpdate) === TRUE) {
                 echo "Account updated successfully!";
-                // Update session data if needed
                 $_SESSION['username'] = $newUsername;
                 $_SESSION['email'] = $newEmail;
             } else {
                 echo "Error: " . $sqlUpdate . "<br>" . $conn->error;
             }
         } else {
-            echo "Old password verification failed!";
+            echo '<script>alert("Old password verification failed!");</script>';
         }
     } else {
-        echo "Error checking old password!";
+        echo '<script>alert("Error checking old password!");</script>';
     }
 }
 
@@ -65,7 +63,7 @@ $resultUser = $conn->query($sqlSelectUser);
 if ($resultUser->num_rows > 0) {
     $user = $resultUser->fetch_assoc();
 } else {
-    echo "User not found!";
+    echo '<script>alert("User not found!");</script>';
     exit();
 }
 ?>
