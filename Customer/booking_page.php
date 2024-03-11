@@ -80,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book"])) {
                     VALUES ('$userId', '$movieId', '$bookingDate', '$timeSlot', '$selectedSeats', '$userEmail')";
 
         if ($conn->query($sqlBook) === TRUE) {
-            echo "Booking successful! Selected Seats: " . $selectedSeats . ", Date: " . $bookingDate . ", Time Slot: " . $timeSlot;
+            echo '<script>alert("Booking successful! Selected Seats: ' . $selectedSeats . ', Date: ' . $bookingDate . ', Time Slot: ' . $timeSlot . '");</script>';
         } else {
             echo "Error: " . $sqlBook . "<br>" . $conn->error;
         }
@@ -89,6 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["book"])) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
